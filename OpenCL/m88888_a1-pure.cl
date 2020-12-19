@@ -142,8 +142,8 @@ KERNEL_FQ void m88888_mxx (KERN_ATTR_BASIC ())
       num *= 1099511628211;
     }
 
-    const u32 r0 = l32_from_64_S (ctx.h[7]);
-    const u32 r1 = h32_from_64_S (ctx.h[7]);
+    const u32 r0 = l32_from_64_S (num);
+    const u32 r1 = h32_from_64_S (num);
     const u32 r2 = 0;
     const u32 r3 = 0;
 
@@ -293,8 +293,8 @@ KERNEL_FQ void m88888_sxx (KERN_ATTR_BASIC ())
       num *= 1099511628211;
     }
 
-    const u32 r0 = l32_from_64_S (ctx.h[7]);
-    const u32 r1 = h32_from_64_S (ctx.h[7]);
+    const u32 r0 = l32_from_64_S (num);
+    const u32 r1 = h32_from_64_S (num);
     const u32 r2 = 0;
     const u32 r3 = 0;
 
