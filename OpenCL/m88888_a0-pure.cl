@@ -47,8 +47,7 @@ KERNEL_FQ void m88888_mxx (KERN_ATTR_RULES ())
 
     for (u32 i = 0; i < tmp.pw_len; i++)
     {
-      u64 t = (u64)p[i];
-      num ^= t;
+      num ^= (p[i]);
       num *= 1099511628211;
     }
 
@@ -105,8 +104,7 @@ KERNEL_FQ void m88888_sxx (KERN_ATTR_RULES ())
 
     for (u32 i = 0; i < tmp.pw_len; i++)
     {
-      u64 t = (u64)p[i];
-      num ^= t;
+      num ^= (p[i]);
       num *= 1099511628211;
     }
 

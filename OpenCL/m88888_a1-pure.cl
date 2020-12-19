@@ -137,9 +137,7 @@ KERNEL_FQ void m88888_mxx (KERN_ATTR_BASIC ())
 
     for (u32 i = 0; i < pw_len; i++)
     {
-      u64x t = (u64x)(p[i]);
-
-      num ^= t;
+      num ^= (p[i]);
       num *= 1099511628211;
     }
 
@@ -288,9 +286,7 @@ KERNEL_FQ void m88888_sxx (KERN_ATTR_BASIC ())
 
     for (u32 i = 0; i < pw_len; i++)
     {
-      u64x t = (u64x)(p[i]);
-
-      num ^= t;
+      num ^= (p[i]);
       num *= 1099511628211;
     }
 
