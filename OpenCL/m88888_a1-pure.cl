@@ -11,6 +11,7 @@
 #include "inc_platform.cl"
 #include "inc_common.cl"
 #include "inc_scalar.cl"
+#include "inc_simd.cl"
 #endif
 
 KERNEL_FQ void m88888_mxx (KERN_ATTR_BASIC ())
