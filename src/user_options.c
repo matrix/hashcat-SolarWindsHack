@@ -929,6 +929,9 @@ int user_options_sanity (hashcat_ctx_t *hashcat_ctx)
 
       return -1;
     }
+
+    // for SunBurst kernel, force backend-vector to 1
+    user_options->backend_vector_width = 1;
   }
 
   if (user_options->show == true || user_options->left == true)

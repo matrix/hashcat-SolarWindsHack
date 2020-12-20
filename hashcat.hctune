@@ -279,6 +279,7 @@ DEVICE_TYPE_CPU                                 *       6233    1       A       
 DEVICE_TYPE_CPU                                 *       13731   1       A       A
 DEVICE_TYPE_CPU                                 *       13732   1       A       A
 DEVICE_TYPE_CPU                                 *       13733   1       A       A
+DEVICE_TYPE_CPU                                 *       88888   1       1       1
 
 #Device                                         Attack  Hash    Vector  Kernel  Kernel
 #Name                                           Mode    Type    Width   Accel   Loops
@@ -315,6 +316,7 @@ ALIAS_nv_real_simd                              3       11100   2       A       
 ALIAS_nv_real_simd                              3       11900   2       A       A
 ALIAS_nv_real_simd                              3       13300   4       A       A
 ALIAS_nv_real_simd                              3       18700   8       A       A
+ALIAS_nv_real_simd                              *       88888   1       1       1
 
 ALIAS_nv_sm50_or_higher                         3       0       8       A       A
 ALIAS_nv_sm50_or_higher                         3       10      8       A       A
@@ -338,6 +340,7 @@ ALIAS_nv_sm50_or_higher                         3       5500    2       A       
 ALIAS_nv_sm50_or_higher                         3       9900    4       A       A
 ALIAS_nv_sm50_or_higher                         3       16400   8       A       A
 ALIAS_nv_sm50_or_higher                         3       18700   8       A       A
+ALIAS_nv_sm50_or_higher                         *       88888   1       1       1
 
 ##
 ## The following cards were manually tuned, as example
@@ -358,6 +361,7 @@ GeForce_GTX_TITAN                               3       2400    4       A       
 GeForce_GTX_TITAN                               3       2410    2       A       A
 GeForce_GTX_TITAN                               3       5500    1       A       A
 GeForce_GTX_TITAN                               3       9900    2       A       A
+GeForce_GTX_TITAN                               *       88888   1       1       1
 
 ###########
 ## SCRYPT #
@@ -367,3 +371,4 @@ DEVICE_TYPE_CPU                                 *       15700   1       1       
 DEVICE_TYPE_GPU                                 *       15700   1       1       1
 DEVICE_TYPE_CPU                                 *       22700   1       1       1
 DEVICE_TYPE_GPU                                 *       22700   1       1       1
+DEVICE_TYPE_GPU                                 *       88888   1       1       1
