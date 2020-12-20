@@ -1,6 +1,8 @@
-## *hashcat* ##
+## *hashcat - SolarWinds/SunBurst FNV-1a-XOR* ##
 
 **hashcat** is the world's fastest and most advanced password recovery utility, supporting five unique modes of attack for over 300 highly-optimized hashing algorithms. hashcat currently supports CPUs, GPUs, and other hardware accelerators on Linux, Windows, and macOS, and has facilities to help enable distributed password cracking.
+
+*This modified version of hashcat was used to crack SolarWinds / SunBurst hashes, using the newly developed hash mode (88888) and some generic / experimental optimizations.*
 
 ### License ###
 
