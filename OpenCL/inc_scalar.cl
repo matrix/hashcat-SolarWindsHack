@@ -16,6 +16,19 @@
   }                                                                                                         \
 }
 
+#define COMPARE_S_SCALAR_2(h0,h1,h2,h3)                                                                     \
+{                                                                                                           \
+  if (((h0) == search[0]) && ((h1) == search[1]))                                                           \
+  {                                                                                                         \
+    const u32 final_hash_pos = DIGESTS_OFFSET + 0;                                                          \
+                                                                                                            \
+    if (atomic_inc (&hashes_shown[final_hash_pos]) == 0)                                                    \
+    {                                                                                                       \
+      mark_hash (plains_buf, d_return_buf, SALT_POS, digests_cnt, 0, final_hash_pos, gid, il_pos, 0, 0);    \
+    }                                                                                                       \
+  }                                                                                                         \
+}
+
 #define COMPARE_M_SCALAR(h0,h1,h2,h3)                                                                       \
 {                                                                                                           \
   const u32 digest_tp0[4] = { h0, h1, h2, h3 };                                                             \
@@ -45,7 +58,7 @@
 {                                                                                                           \
   const u32 digest_tp0[4] = { h0, h1, h2, h3 };                                                             \
                                                                                                             \
-  if (check (digest_tp0,                                                                                    \
+  if (check_2 (digest_tp0,                                                                                  \
              bitmaps_buf_s1_a, bitmaps_buf_s1_b, bitmaps_buf_s1_c, bitmaps_buf_s1_d,                        \
              bitmaps_buf_s2_a, bitmaps_buf_s2_b, bitmaps_buf_s2_c, bitmaps_buf_s2_d,                        \
              bitmap_mask,                                                                                   \

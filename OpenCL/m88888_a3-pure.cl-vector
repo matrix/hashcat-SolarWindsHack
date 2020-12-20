@@ -1,0 +1,209 @@
+/**
+ * Author......: See docs/credits.txt
+ * License.....: MIT
+ */
+
+#define NEW_SIMD_CODE
+
+#ifdef KERNEL_STATIC
+#include "inc_vendor.h"
+#include "inc_types.h"
+#include "inc_platform.cl"
+#include "inc_common.cl"
+#include "inc_scalar.cl"
+#include "inc_simd.cl"
+#endif
+
+KERNEL_FQ void m88888_mxx (KERN_ATTR_VECTOR ())
+{
+  /**
+   * modifier
+   */
+
+  const u64 gid = get_global_id (0);
+
+  if (gid >= gid_max) return;
+
+  /**
+   * base
+   */
+
+  const u32 pw_len = pws[gid].pw_len;
+
+  u64x P[256];
+
+  u32x ww =  pws[gid].i[0];
+
+  for (u32 i = 0, idx = 0; i < pw_len; i += 4, idx += 1)
+  {
+#if VECT_SIZE == 1
+    P[i+3] = (pws[gid].i[idx] >> 24) & 0xff;
+    P[i+2] = (pws[gid].i[idx] >> 16) & 0xff;
+    P[i+1] = (pws[gid].i[idx] >>  8) & 0xff;
+    P[i+0] = pws[gid].i[idx] & 0xff;
+#else
+    u32x p = pws[gid].i[idx];
+    P[i+3].x = (p.x >> 24) & 0xff;
+    P[i+3].y = (p.y >> 24) & 0xff;
+
+    P[i+2].x = (p.x >> 16) & 0xff;
+    P[i+2].y = (p.y >> 16) & 0xff;
+
+    P[i+1].x = (p.x >>  8) & 0xff;
+    P[i+1].y = (p.y >>  8) & 0xff;
+
+    P[i+0].x = p.x & 0xff;
+    P[i+0].y = p.y & 0xff;
+#endif
+  }
+
+  /**
+   * loop
+   */
+
+  u32x w0l = ww;
+
+  for (u32 il_pos = 0; il_pos < il_cnt; il_pos += VECT_SIZE)
+  {
+    const u32x w0r = words_buf_r[il_pos / VECT_SIZE];
+
+    const u32x w0 = w0l | w0r;
+
+#if VECT_SIZE == 1
+    P[3] = (w0 >> 24) & 0xff;
+    P[2] = (w0 >> 16) & 0xff;
+    P[1] = (w0 >>  8) & 0xff;
+    P[0] = w0 & 0xff;
+#else
+    P[3].x = (w0.x >> 24) & 0xff;
+    P[3].y = (w0.y >> 24) & 0xff;
+
+    P[2].x = (w0.x >> 16) & 0xff;
+    P[2].y = (w0.y >> 16) & 0xff;
+
+    P[1].x = (w0.x >>  8) & 0xff;
+    P[1].y = (w0.y >>  8) & 0xff;
+
+    P[0].x = w0.x & 0xff;
+    P[0].y = w0.y & 0xff;
+#endif
+
+    u64x num = 14695981039346656037ULL;
+
+    for (u32 i = 0; i < pw_len; i++)
+    {
+      num ^= P[i];
+      num *= 1099511628211;
+    }
+
+    const u32x r0 = l32_from_64 (num);
+    const u32x r1 = h32_from_64 (num);
+    const u32x r2 = 0;
+    const u32x r3 = 0;
+
+    COMPARE_M_SIMD (r0, r1, r2, r3);
+  }
+}
+
+KERNEL_FQ void m88888_sxx (KERN_ATTR_VECTOR ())
+{
+  /**
+   * modifier
+   */
+
+  const u64 gid = get_global_id (0);
+
+  if (gid >= gid_max) return;
+
+  /**
+   * digest
+   */
+
+  const u32 search[4] =
+  {
+    digests_buf[DIGESTS_OFFSET].digest_buf[DGST_R0],
+    digests_buf[DIGESTS_OFFSET].digest_buf[DGST_R1],
+    0,
+    0
+  };
+
+  /**
+   * base
+   */
+
+  const u32 pw_len = pws[gid].pw_len;
+
+  u64x P[256];
+
+  u32x ww =  pws[gid].i[0];
+
+  for (u32 i = 0, idx = 0; i < pw_len; i += 4, idx += 1)
+  {
+#if VECT_SIZE == 1
+    P[i+3] = (pws[gid].i[idx] >> 24) & 0xff;
+    P[i+2] = (pws[gid].i[idx] >> 16) & 0xff;
+    P[i+1] = (pws[gid].i[idx] >>  8) & 0xff;
+    P[i+0] = pws[gid].i[idx] & 0xff;
+#else
+    u32x p = pws[gid].i[idx];
+    P[i+3].x = (p.x >> 24) & 0xff;
+    P[i+3].y = (p.y >> 24) & 0xff;
+
+    P[i+2].x = (p.x >> 16) & 0xff;
+    P[i+2].y = (p.y >> 16) & 0xff;
+
+    P[i+1].x = (p.x >>  8) & 0xff;
+    P[i+1].y = (p.y >>  8) & 0xff;
+
+    P[i+0].x = p.x & 0xff;
+    P[i+0].y = p.y & 0xff;
+#endif
+  }
+
+  /**
+   * loop
+   */
+
+  u32x w0l = ww;
+
+  for (u32 il_pos = 0; il_pos < il_cnt; il_pos += VECT_SIZE)
+  {
+    const u32x w0r = words_buf_r[il_pos / VECT_SIZE];
+
+    const u32x w0 = w0l | w0r;
+
+#if VECT_SIZE == 1
+    P[3] = (w0 >> 24) & 0xff;
+    P[2] = (w0 >> 16) & 0xff;
+    P[1] = (w0 >>  8) & 0xff;
+    P[0] = w0 & 0xff;
+#else
+    P[3].x = (w0.x >> 24) & 0xff;
+    P[3].y = (w0.y >> 24) & 0xff;
+
+    P[2].x = (w0.x >> 16) & 0xff;
+    P[2].y = (w0.y >> 16) & 0xff;
+
+    P[1].x = (w0.x >>  8) & 0xff;
+    P[1].y = (w0.y >>  8) & 0xff;
+
+    P[0].x = w0.x & 0xff;
+    P[0].y = w0.y & 0xff;
+#endif
+
+    u64x num = 14695981039346656037ULL;
+
+    for (u32 i = 0; i < pw_len; i++)
+    {
+      num ^= P[i];
+      num *= 1099511628211;
+    }
+
+    const u32x r0 = l32_from_64 (num);
+    const u32x r1 = h32_from_64 (num);
+    const u32x r2 = 0;
+    const u32x r3 = 0;
+
+    COMPARE_S_SIMD (r0, r1, r2, r3);
+  }
+}

@@ -10,7 +10,7 @@
 #include "inc_types.h"
 #include "inc_platform.cl"
 #include "inc_common.cl"
-#include "inc_scalar.cl"
+#include "inc_simd.cl"
 #endif
 
 KERNEL_FQ void m88888_mxx (KERN_ATTR_VECTOR ())
@@ -65,7 +65,7 @@ KERNEL_FQ void m88888_mxx (KERN_ATTR_VECTOR ())
     const u32x r2 = 0;
     const u32x r3 = 0;
 
-    COMPARE_M_SCALAR_2 (r0, r1, r2, r3);
+    COMPARE_M_SIMD_2 (r0, r1, r2, r3);
   }
 }
 
@@ -133,6 +133,6 @@ KERNEL_FQ void m88888_sxx (KERN_ATTR_VECTOR ())
     const u32x r2 = 0;
     const u32x r3 = 0;
 
-    COMPARE_S_SCALAR (r0, r1, r2, r3);
+    COMPARE_S_SIMD_2 (r0, r1, r2, r3);
   }
 }

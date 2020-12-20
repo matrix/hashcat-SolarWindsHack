@@ -26,6 +26,19 @@
   }                                                                                                         \
 }
 
+#define COMPARE_S_SIMD_2(h0,h1,h2,h3)                                                                       \
+{                                                                                                           \
+  if (((h0) == search[0]) && ((h1) == search[1]))                                                           \
+  {                                                                                                         \
+    const u32 final_hash_pos = DIGESTS_OFFSET + 0;                                                          \
+                                                                                                            \
+    if (atomic_inc (&hashes_shown[final_hash_pos]) == 0)                                                    \
+    {                                                                                                       \
+      mark_hash (plains_buf, d_return_buf, SALT_POS, digests_cnt, 0, final_hash_pos, gid, il_pos, 0, 0);    \
+    }                                                                                                       \
+  }                                                                                                         \
+}
+
 #define COMPARE_M_SIMD(h0,h1,h2,h3)                                                                         \
 {                                                                                                           \
   const u32 digest_tp0[4] = { h0, h1, h2, h3 };                                                             \
@@ -38,6 +51,31 @@
              bitmap_shift2))                                                                                \
   {                                                                                                         \
     int digest_pos = find_hash (digest_tp0, digests_cnt, &digests_buf[DIGESTS_OFFSET]);                     \
+                                                                                                            \
+    if (digest_pos != -1)                                                                                   \
+    {                                                                                                       \
+      const u32 final_hash_pos = DIGESTS_OFFSET + digest_pos;                                               \
+                                                                                                            \
+      if (atomic_inc (&hashes_shown[final_hash_pos]) == 0)                                                  \
+      {                                                                                                     \
+        mark_hash (plains_buf, d_return_buf, SALT_POS, digests_cnt, digest_pos, final_hash_pos, gid, il_pos, 0, 0); \
+      }                                                                                                     \
+    }                                                                                                       \
+  }                                                                                                         \
+}
+
+#define COMPARE_M_SIMD_2(h0,h1,h2,h3)                                                                       \
+{                                                                                                           \
+  const u32 digest_tp0[4] = { h0, h1, h2, h3 };                                                             \
+                                                                                                            \
+  if (check_2 (digest_tp0,                                                                                  \
+             bitmaps_buf_s1_a, bitmaps_buf_s1_b, bitmaps_buf_s1_c, bitmaps_buf_s1_d,                        \
+             bitmaps_buf_s2_a, bitmaps_buf_s2_b, bitmaps_buf_s2_c, bitmaps_buf_s2_d,                        \
+             bitmap_mask,                                                                                   \
+             bitmap_shift1,                                                                                 \
+             bitmap_shift2))                                                                                \
+  {                                                                                                         \
+    int digest_pos = find_hash_2 (digest_tp0, digests_cnt, &digests_buf[DIGESTS_OFFSET]);                   \
                                                                                                             \
     if (digest_pos != -1)                                                                                   \
     {                                                                                                       \
@@ -85,6 +123,29 @@
   }                                                                                                         \
 }
 
+#define COMPARE_S_SIMD_2(h0,h1,h2,h3)                                                                       \
+{                                                                                                           \
+  if (((h0).s0 == search[0]) && ((h1).s0 == search[1]))                                                     \
+  {                                                                                                         \
+    const u32 final_hash_pos = DIGESTS_OFFSET + 0;                                                          \
+                                                                                                            \
+    if (vector_accessible (il_pos, il_cnt, 0) && (atomic_inc (&hashes_shown[final_hash_pos]) == 0))         \
+    {                                                                                                       \
+      mark_hash (plains_buf, d_return_buf, SALT_POS, digests_cnt, 0, final_hash_pos, gid, il_pos + 0, 0, 0); \
+    }                                                                                                       \
+  }                                                                                                         \
+                                                                                                            \
+  if (((h0).s1 == search[0]) && ((h1).s1 == search[1]))                                                     \
+  {                                                                                                         \
+    const u32 final_hash_pos = DIGESTS_OFFSET + 0;                                                          \
+                                                                                                            \
+    if (vector_accessible (il_pos, il_cnt, 1) && (atomic_inc (&hashes_shown[final_hash_pos]) == 0))         \
+    {                                                                                                       \
+      mark_hash (plains_buf, d_return_buf, SALT_POS, digests_cnt, 0, final_hash_pos, gid, il_pos + 1, 0, 0); \
+    }                                                                                                       \
+  }                                                                                                         \
+}
+
 #define COMPARE_M_SIMD(h0,h1,h2,h3)                                                                         \
 {                                                                                                           \
   const u32 digest_tp0[4] = { h0.s0, h1.s0, h2.s0, h3.s0 };                                                 \
@@ -118,6 +179,52 @@
              bitmap_shift2))                                                                                \
   {                                                                                                         \
     int digest_pos = find_hash (digest_tp1, digests_cnt, &digests_buf[DIGESTS_OFFSET]);                     \
+                                                                                                            \
+    if (digest_pos != -1)                                                                                   \
+    {                                                                                                       \
+      const u32 final_hash_pos = DIGESTS_OFFSET + digest_pos;                                               \
+                                                                                                            \
+      if (vector_accessible (il_pos, il_cnt, 1) && (atomic_inc (&hashes_shown[final_hash_pos]) == 0))       \
+      {                                                                                                     \
+        mark_hash (plains_buf, d_return_buf, SALT_POS, digests_cnt, digest_pos, final_hash_pos, gid, il_pos + 1, 0, 0); \
+      }                                                                                                     \
+    }                                                                                                       \
+  }                                                                                                         \
+}
+
+#define COMPARE_M_SIMD_2(h0,h1,h2,h3)                                                                       \
+{                                                                                                           \
+  const u32 digest_tp0[4] = { h0.s0, h1.s0, h2.s0, h3.s0 };                                                 \
+  const u32 digest_tp1[4] = { h0.s1, h1.s1, h2.s1, h3.s1 };                                                 \
+                                                                                                            \
+  if (check_2 (digest_tp0,                                                                                  \
+             bitmaps_buf_s1_a, bitmaps_buf_s1_b, bitmaps_buf_s1_c, bitmaps_buf_s1_d,                        \
+             bitmaps_buf_s2_a, bitmaps_buf_s2_b, bitmaps_buf_s2_c, bitmaps_buf_s2_d,                        \
+             bitmap_mask,                                                                                   \
+             bitmap_shift1,                                                                                 \
+             bitmap_shift2))                                                                                \
+  {                                                                                                         \
+    int digest_pos = find_hash_2 (digest_tp0, digests_cnt, &digests_buf[DIGESTS_OFFSET]);                   \
+                                                                                                            \
+    if (digest_pos != -1)                                                                                   \
+    {                                                                                                       \
+      const u32 final_hash_pos = DIGESTS_OFFSET + digest_pos;                                               \
+                                                                                                            \
+      if (vector_accessible (il_pos, il_cnt, 0) && (atomic_inc (&hashes_shown[final_hash_pos]) == 0))       \
+      {                                                                                                     \
+        mark_hash (plains_buf, d_return_buf, SALT_POS, digests_cnt, digest_pos, final_hash_pos, gid, il_pos + 0, 0, 0); \
+      }                                                                                                     \
+    }                                                                                                       \
+  }                                                                                                         \
+                                                                                                            \
+  if (check_2 (digest_tp1,                                                                                  \
+             bitmaps_buf_s1_a, bitmaps_buf_s1_b, bitmaps_buf_s1_c, bitmaps_buf_s1_d,                        \
+             bitmaps_buf_s2_a, bitmaps_buf_s2_b, bitmaps_buf_s2_c, bitmaps_buf_s2_d,                        \
+             bitmap_mask,                                                                                   \
+             bitmap_shift1,                                                                                 \
+             bitmap_shift2))                                                                                \
+  {                                                                                                         \
+    int digest_pos = find_hash_2 (digest_tp1, digests_cnt, &digests_buf[DIGESTS_OFFSET]);                   \
                                                                                                             \
     if (digest_pos != -1)                                                                                   \
     {                                                                                                       \

@@ -113,6 +113,6 @@ KERNEL_FQ void m88888_sxx (KERN_ATTR_RULES ())
     const u32 r2 = 0;
     const u32 r3 = 0;
 
-    COMPARE_S_SCALAR (r0, r1, r2, r3);
+    COMPARE_S_SCALAR_2 (r0, r1, r2, r3);
   }
 }
