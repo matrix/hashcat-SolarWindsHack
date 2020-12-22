@@ -5,6 +5,8 @@
 
 //#define NEW_SIMD_CODE
 
+#define OPT1
+
 #ifdef KERNEL_STATIC
 #include "inc_vendor.h"
 #include "inc_types.h"
@@ -138,7 +140,11 @@ KERNEL_FQ void m88888_mxx (KERN_ATTR_BASIC ())
     for (u32 i = 0; i < pw_len; i++)
     {
       num ^= (p[i]);
+#ifdef OPT1
+      num += (num << 1) + (num << 4) + (num << 5) + (num << 7) + (num << 8) + (num << 40);
+#else
       num *= 1099511628211;
+#endif
     }
 
     const u32 r0 = l32_from_64_S (num);
@@ -287,7 +293,11 @@ KERNEL_FQ void m88888_sxx (KERN_ATTR_BASIC ())
     for (u32 i = 0; i < pw_len; i++)
     {
       num ^= (p[i]);
+#ifdef OPT1
+      num += (num << 1) + (num << 4) + (num << 5) + (num << 7) + (num << 8) + (num << 40);
+#else
       num *= 1099511628211;
+#endif
     }
 
     const u32 r0 = l32_from_64_S (num);
